@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo apt-get install recode
+uname -a
 
 set -ex
 
