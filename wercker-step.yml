@@ -1,3 +1,43 @@
 name: OCCS-rolling-router-deploy
-version: 1.0.0
+version: 1.0.1
 description: Deploys the application for OCCS rolling router
+properties:
+  API_TOKEN:
+    type: string
+    required: true
+  APP_NAME:
+    type: string
+    required: true
+  APP_FRIENDLY_NAME:
+    type: string
+    required: true
+  DOCKER_EMAIL:
+    type: string
+    default: all
+    required: true
+  DOCKER_PASSWORD:
+    type: string
+    required: true
+  DOCKER_REGISTRY:
+    type: string
+    required: true
+  DOCKER_USERNAME:
+    type: string
+    required: true
+  EXPOSED_PORT:
+    type: string
+    required: true
+  IMAGE_NAME:
+    type: string
+    required: true
+  SERVICE_MANAGER:
+    type: string
+    required: true
+  SCALE_AMOUNT:
+    type: string
+    default: 1
+    required: false
+  APP_TAG:
+    type: string
+    default: latest
+    required: false
