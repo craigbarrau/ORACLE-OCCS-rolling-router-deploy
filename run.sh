@@ -15,7 +15,7 @@ TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 POSTDATA=$(cat <<ENDOFTEMPLATE
 {
   "deployment_id": "${APP_NAME}-${TIMESTAMP}",
-  "deployment_name": "${APP_FRIENDLY_NAME} ${TRAVIS_BUILD_NUMBER}",
+  "deployment_name": "${APP_FRIENDLY_NAME} ${$WERCKER_MAIN_PIPELINE_STARTED}",
   "desired_state": 1,
   "placement": {
     "pool_id": "default"
@@ -24,9 +24,9 @@ POSTDATA=$(cat <<ENDOFTEMPLATE
     "app": ${SCALE_AMOUNT}
   },
   "stack": {
-    "content": "version: 2\nservices:\n  app:\n    image: \"${DOCKER_REGISTRY}/${IMAGE_NAME}:${TRAVIS_BUILD_NUMBER}\"\n    ports:\n      - ${EXPOSED_PORT}/tcp\n    environment:\n      - LOADERIO_KEY=loaderio-0806b2c02d2b955d22996f2650fc117a\n      - \"occs:availability=per-pool\"\n      - \"occs:scheduler=random\"\n",
+    "content": "version: 2\nservices:\n  app:\n    image: \"${DOCKER_REGISTRY}/${IMAGE_NAME}:${$WERCKER_MAIN_PIPELINE_STARTED}\"\n    ports:\n      - ${EXPOSED_PORT}/tcp\n    environment:\n      - LOADERIO_KEY=loaderio-0806b2c02d2b955d22996f2650fc117a\n      - \"occs:availability=per-pool\"\n      - \"occs:scheduler=random\"\n",
     "service_id": "app",
-    "service_name": "${APP_FRIENDLY_NAME} ${TRAVIS_BUILD_NUMBER}",
+    "service_name": "${APP_FRIENDLY_NAME} ${$WERCKER_MAIN_PIPELINE_STARTED}",
     "subtype": "service"
   }
 }
