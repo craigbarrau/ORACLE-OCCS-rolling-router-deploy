@@ -1,4 +1,6 @@
 #!/bin/bash
+apt-get install recode
+
 set -ex
 
 INSECURE_CURL="-k"
