@@ -1,5 +1,5 @@
 #!/bin/bash
-apt-get install recode
+sudo apt-get install recode
 
 set -ex
 
