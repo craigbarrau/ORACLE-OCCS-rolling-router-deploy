@@ -1,5 +1,5 @@
 name: OCCS-rolling-router-deploy
-version: 1.0.6
+version: 1.0.7
 description: Deploys the application for OCCS rolling router
 properties:
   API_TOKEN:
