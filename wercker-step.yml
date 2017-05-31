@@ -1,6 +1,6 @@
 name: OCCS-rolling-router-deploy
-version: 1.0.7
-description: Deploys the application for OCCS rolling router
+version: 1.0.8
+description: Deploys the application for OCCS rolling router; Node.js, npm
 properties:
   API_TOKEN:
     type: string
@@ -40,4 +40,8 @@ properties:
   APP_TAG:
     type: string
     default: latest
+    required: false
+  DOCKER_CMD:
+    type: string
+    default: npm start
     required: false
