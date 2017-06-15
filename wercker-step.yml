@@ -1,4 +1,4 @@
-name: OCCS-rolling-router-deploy
+name: ORACLE-OCCS-rolling-router-deploy
 version: 1.0.0
 description: Deploys the application for OCCS rolling router; Node.js, npm
 properties:
