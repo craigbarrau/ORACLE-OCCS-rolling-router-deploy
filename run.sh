@@ -75,58 +75,58 @@ ORIGINAL_DEPLOY_ID=$(echo $ORIGINAL_CANDIDATE | sed -r 's/apps\/app-(.+)-([0-9]+
 HTTP_CODE=$(curl ${INSECURE_CURL} -s -XGET -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${API_TOKEN}" ${SERVICE_MANAGER}/api/v2/deployments/${ORIGINAL_DEPLOY_ID})
 if [ $HTTP_CODE -eq 404 ]; then
   echo "Tried to remove inactive deployment ${ORIGINAL_DEPLOY_ID} but it doesn't exist."
-  exit 0
-fi
-
-# First, the deployment must be stopped
-curl ${INSECURE_CURL} -s -XPOST -H "Authorization: Bearer ${API_TOKEN}" ${SERVICE_MANAGER}/api/v2/deployments/${ORIGINAL_DEPLOY_ID}/stop
-
-# Make sure it has stopped
-TRY=0
-MAX_TRIES=30
-WAIT_SECONDS=10
-STOPPED=0
-while [ $TRY -lt $MAX_TRIES ]; do
- TRY=$(( $TRY + 1 ))
- RESPONSE=$(curl ${INSECURE_CURL} -s -XGET -H "Authorization: Bearer ${API_TOKEN}" ${SERVICE_MANAGER}/api/v2/deployments/${ORIGINAL_DEPLOY_ID} | recode html..ascii | jq ".deployment | .current_state == .desired_state")
-
- if [ "$RESPONSE" == "true" ]; then
-  STOPPED=1
-  break
- fi
- echo "Current and desired state of deployment do not match. ${TRY} of ${MAX_TRIES} tries."
- sleep $WAIT_SECONDS
-done
-
-if [ $STOPPED -gt 0 ]; then
-  # Finally, remove the deployment, and reset the ID
-  echo "Original deployment has stopped. Removing the deployment for ${ORIGINAL_DEPLOY_ID}."
-
-  TRY=0
-  MAX_TRIES=30
-  WAIT_SECONDS=10
-  REMOVED=0
-  while [ $TRY -lt $MAX_TRIES ]; do
-   TRY=$(( $TRY + 1 ))
-   RESPONSE=$(curl ${INSECURE_CURL} -k -s -XDELETE -H "Authorization: Bearer ${API_TOKEN}" ${SERVICE_MANAGER}/api/v2/deployments/${ORIGINAL_DEPLOY_ID})
-   ERROR_COUNT=$(echo ${RESPONSE} | recode html..ascii | jq -r ".errors | length")
-
-   if [ $ERROR_COUNT -gt 0 ]; then
-    ERRORS=$(echo ${RESPONSE} | recode html..ascii | jq ".errors[].message")
-    echo "${TRY} of ${MAX_TRIES} removal tries. ${ERRORS}"
-   else
-    REMOVED=1
-    break
-   fi
-   sleep $WAIT_SECONDS
-  done
-
-  if [ $REMOVED -gt 0 ]; then
-    echo "Deployment ${ORIGINAL_DEPLOY_ID} has been removed."
-  else
-    echo "Checked ${MAX_TRIES} times but ${ORIGINAL_DEPLOY_ID} is not removed. You may need to remove it manually."
-  fi
-
+  # exit 0
 else
-  echo "Checked ${MAX_TRIES} times but deployment is not stopped. You may need to stop it manually."
+    # First, the deployment must be stopped
+    curl ${INSECURE_CURL} -s -XPOST -H "Authorization: Bearer ${API_TOKEN}" ${SERVICE_MANAGER}/api/v2/deployments/${ORIGINAL_DEPLOY_ID}/stop
+
+    # Make sure it has stopped
+    TRY=0
+    MAX_TRIES=30
+    WAIT_SECONDS=10
+    STOPPED=0
+    while [ $TRY -lt $MAX_TRIES ]; do
+     TRY=$(( $TRY + 1 ))
+     RESPONSE=$(curl ${INSECURE_CURL} -s -XGET -H "Authorization: Bearer ${API_TOKEN}" ${SERVICE_MANAGER}/api/v2/deployments/${ORIGINAL_DEPLOY_ID} | recode html..ascii | jq ".deployment | .current_state == .desired_state")
+
+     if [ "$RESPONSE" == "true" ]; then
+      STOPPED=1
+      break
+     fi
+     echo "Current and desired state of deployment do not match. ${TRY} of ${MAX_TRIES} tries."
+     sleep $WAIT_SECONDS
+    done
+
+    if [ $STOPPED -gt 0 ]; then
+      # Finally, remove the deployment, and reset the ID
+      echo "Original deployment has stopped. Removing the deployment for ${ORIGINAL_DEPLOY_ID}."
+
+      TRY=0
+      MAX_TRIES=30
+      WAIT_SECONDS=10
+      REMOVED=0
+      while [ $TRY -lt $MAX_TRIES ]; do
+       TRY=$(( $TRY + 1 ))
+       RESPONSE=$(curl ${INSECURE_CURL} -k -s -XDELETE -H "Authorization: Bearer ${API_TOKEN}" ${SERVICE_MANAGER}/api/v2/deployments/${ORIGINAL_DEPLOY_ID})
+       ERROR_COUNT=$(echo ${RESPONSE} | recode html..ascii | jq -r ".errors | length")
+
+       if [ $ERROR_COUNT -gt 0 ]; then
+        ERRORS=$(echo ${RESPONSE} | recode html..ascii | jq ".errors[].message")
+        echo "${TRY} of ${MAX_TRIES} removal tries. ${ERRORS}"
+       else
+        REMOVED=1
+        break
+       fi
+       sleep $WAIT_SECONDS
+      done
+
+      if [ $REMOVED -gt 0 ]; then
+        echo "Deployment ${ORIGINAL_DEPLOY_ID} has been removed."
+      else
+        echo "Checked ${MAX_TRIES} times but ${ORIGINAL_DEPLOY_ID} is not removed. You may need to remove it manually."
+      fi
+
+    else
+      echo "Checked ${MAX_TRIES} times but deployment is not stopped. You may need to stop it manually."
+    fi
 fi
