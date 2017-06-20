@@ -1,5 +1,5 @@
 name: ORACLE-OCCS-rolling-router-deploy
-version: 1.0.0
+version: 1.0.1
 description: Deploys the application for OCCS rolling router; Node.js, npm
 properties:
   API_TOKEN:
@@ -36,10 +36,6 @@ properties:
   SCALE_AMOUNT:
     type: string
     default: 1
-    required: false
-  APP_TAG:
-    type: string
-    default: latest
     required: false
   DOCKER_CMD:
     type: string
